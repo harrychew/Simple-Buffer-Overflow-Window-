@@ -1,0 +1,22 @@
+	xxxxxxxxxxxxxxxx  xxxx  xxxx    xxxxxxx
+	[JUNK BYTES]	  [EBP] [EIP]   [PAYLOAD]
+replace to execute payload--------^	  ^----ESP register points here//shell code
+source:https://www.youtube.com/watch?v=0qCw-iCwJM0
+use overflow.exe you created 
+1. !mona config -set workingfolder c:\mona\%p
+2. !mona pc 100 //pattern
+3. in c:\mona\overflow, copy ASCII
+4. press << to restart the program
+5. run again, paste the ASCII in the terminal
+6. back to immunity, copy the EIP address
+7. !mona po <EIP address>//pattern offset
+8. check the output, it will say pattern xxx found in cyclic pattern at position 62..
+//now we know how many byte we need to fill up to reach EIP
+//since this is window and it runs dll file, we can use kernel32.dll
+//to find "jmp esp". overwrite the EIP with the jump instruction in the kernel32.dll
+//that will make it to jump to our other address which is locate in the esp register
+9. !mona jmp -r esp -m kernel
+//copy one of the address
+//for my case is 7530F547
+10. open a python file (xploit.py), check out the code there
+11. if all goes well, execute the python file and it should open calc.exe
